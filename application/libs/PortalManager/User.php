@@ -1,4 +1,4 @@
-<? 
+<?
 namespace PortalManager;
 
 use TransactionManager\Transaction;
@@ -6,7 +6,7 @@ use MailManager\Mails;
 use ExceptionManager\RedirectException;
 /**
  * class Users
- * 
+ *
  */
 class User
 {
@@ -31,18 +31,17 @@ class User
 		$this->lang 		= $arg[lang];
 
 		$this->user = $this->get();
-	}	
-		
+	}
+
 	private function get( $arg = array() )
 	{
 		$ret 			= array();
-		
+
 		if(!$this->id) return false;
-		
+
 		$ret[data] 			= $this->getData( $this->id, 'ID' );
 		$ret[email] 		= $ret[data][email];
-		$ret[europass] 		= $this->loadEuropass( $this->id, true );
-		
+
 		return $ret;
 	}
 
@@ -50,13 +49,12 @@ class User
 		if($account_id == '') return false;
 
 		$q = "
-		SELECT 			u.*, 
-						(SELECT 1 FROM ".\PortalManager\Users::TABLE_PREMIUM." WHERE fiok_id = u.ID and NOW() > mikortol and NOW() < meddig ) as employer_premium
-		FROM 			".\PortalManager\Users::TABLE_NAME." as u 
+		SELECT 			u.*
+		FROM 			".\PortalManager\Users::TABLE_NAME." as u
 		WHERE 			1 = 1 ";
-		
+
 		$q .= " and u.".$db_by." = '$account_id';";
-	
+
 		extract($this->db->q($q));
 
 		// Details
@@ -65,7 +63,7 @@ class User
 		foreach ($det as $d ) {
 			$data[$d['nev']] = $d['ertek'];
 		}
-				
+
 		return $data;
 	}
 
@@ -74,17 +72,17 @@ class User
 	 * @param int $amount összeg mozgás jóváírás
 	 * @param enum $transaction_type tranzakció típusa
 	 * @param boolean $alert_out felhasználó kiértesítése a tranzakcióról
-	 * @param array $arguments külső paraméterek 
-	 * 
+	 * @param array $arguments külső paraméterek
+	 *
 	 * @return string hashkey Tranzakció ID
-	 * */ 
+	 * */
 	public function balance ( $amount = 0, $transaction_type, $alert_out = false, $arguments = array() )
 	{
 		$elemid = false;
 
 		// Egyenleg mentése
 		if ( $amount == 0 || empty( $amount) ) { return false; }
-		
+
 		$transaction = new Transaction( null, array(
 			'db' => $this->db,
 			'settings' => $this->settings
@@ -93,28 +91,28 @@ class User
 		$hashkey 	= md5(microtime());
 		$paymentid 	= null;
 		$comment 	= null;
-		$valuta 	= 'HUF'; 
+		$valuta 	= 'HUF';
 
 		switch ( $transaction_type ) {
 			case self::BALANCE_TRANSACTION_TRANSFER:
 				$trans_type = 'balance_topup';
-				$comment 	= 'lng_balance_topup_by_transfer';				
+				$comment 	= 'lng_balance_topup_by_transfer';
 			break;
 			case self::BALANCE_TRANSACTION_ADDITION:
 				$trans_type = 'balance_topup';
-				$comment 	= 'lng_balance_topup_by_addition';				
+				$comment 	= 'lng_balance_topup_by_addition';
 			break;
 			case self::BALANCE_SERVICE_ORDER_AD:
 				$trans_type = 'service_order';
-				$comment 	= 'lng_balance_service_order_ad';				
-			break;	
+				$comment 	= 'lng_balance_service_order_ad';
+			break;
 			case self::BALANCE_AD_RENEW:
 				$trans_type = 'ad_renew';
-				$comment 	= 'lng_balance_ad_renew';				
+				$comment 	= 'lng_balance_ad_renew';
 			break;
-			default: 
+			default:
 				$trans_type = $transaction_type;
-				$comment 	= 'lng_balance_'.$transaction_type;		
+				$comment 	= 'lng_balance_'.$transaction_type;
 			break;
 		}
 
@@ -126,7 +124,7 @@ class User
 
 		// Kiértesítés
 		if ( $alert_out ) {
-			$mailarg = array();			
+			$mailarg = array();
 			$mailarg['user'] 		= $this->user;
 			$mailarg['amount'] 		= $amount;
 			$mailarg['hashkey']		= $hashkey;
@@ -165,7 +163,7 @@ class User
 		if( $get_xml ) {
 			$ret['xml_source']	= htmlentities( $ep_data['europass_xml'] );
 		}
-		
+
 		$ret['has_europass'] 	= true;
 		$ret['last_refresh'] 	= $ep_data['idopont'];
 
@@ -184,16 +182,16 @@ class User
 				'slot_left' => 0,
 				'free' => array(
 					// Elérhető létrehozható hirdetések száma - ingyenesen
-					'avaiable' 		=> 1, 
-					// Engedélyezett futamidők - ingyenesen		
-					'allowed_days' 	=> array( 5 ) 	
+					'avaiable' 		=> 1,
+					// Engedélyezett futamidők - ingyenesen
+					'allowed_days' 	=> array( 5 )
 				),
 				'paid' => array(
 					// Elérhető létrehozható hirdetések száma - fizetett
-					'avaiable' 		=> 0, 
-					// Engedélyezett futamidők - fizetett		
+					'avaiable' 		=> 0,
+					// Engedélyezett futamidők - fizetett
 					'allowed_days' 	=> array( ),
-					'package' 		=> false 	
+					'package' 		=> false
 				)
 			),
 			'contact_watcher' 	=> array(
@@ -207,11 +205,11 @@ class User
 
 		foreach( $services as $service ) {
 			$ret['ads']['paid']['avaiable'] 		= (int)$ret['ads']['paid']['avaiable'] + $service['hirdetes_maradt'];
-			
+
 			if( !in_array( $service['elerheto_napok'], $ret['ads']['paid']['allowed_days'] )) {
-				$ret['ads']['paid']['allowed_days'][] 	= $service['elerheto_napok'];	
+				$ret['ads']['paid']['allowed_days'][] 	= $service['elerheto_napok'];
 			}
-			 
+
 			$ret['ads']['paid']['package'][] 		= array(
 				'id' 			=> $service['csomag_azonosito'],
 				'eid' 			=> $service['id'],
@@ -225,9 +223,9 @@ class User
 		}
 
 		// Ingyenes hirdetés számolás
-		$date_edge = date( 'Y-m-d H:i:s', strtotime( NOW . ' -30 day' ) );		
+		$date_edge = date( 'Y-m-d H:i:s', strtotime( NOW . ' -30 day' ) );
 		$honap_hirdetesek = $this->db->query("SELECT count(id) FROM ".\PortalManager\Ad::TABLE." WHERE fiok_id = $account and feladas_ido > '$date_edge';")->fetchColumn();
-		$ret['ads']['free']['avaiable'] = ( (int) $ret['ads']['free']['avaiable'] ) - $honap_hirdetesek; 
+		$ret['ads']['free']['avaiable'] = ( (int) $ret['ads']['free']['avaiable'] ) - $honap_hirdetesek;
 		$ret['ads']['free']['avaiable'] = ( $ret['ads']['free']['avaiable'] < 0 ) ? 0 : $ret['ads']['free']['avaiable'];
 		$ret['ads']['slot_left'] 		= (int)$ret['ads']['slot_left']  +  (int) $ret['ads']['free']['avaiable'];
 
@@ -252,7 +250,7 @@ class User
 		$city_id = $this->user['data']['city'];
 
 		if( empty($city_id) ) return false;
-		
+
 		$q 		= "SELECT neve FROM ".\PortalManager\Categories::TYPE_TERULETEK." WHERE ID = $city_id;";
 		$qry 	= $this->db->query( $q )->fetch(\PDO::FETCH_ASSOC);
 
@@ -414,7 +412,7 @@ class User
 
 		if( !$hide_http && strpos( 'http://', $web ) === false ) {
 			$web = 'http://'.$web;
-		} 
+		}
 
 		return $web;
 	}
@@ -478,18 +476,18 @@ class User
 
 		$age = strtotime( $birthday );
 
-		if( $age === false ){ 
-	        return false; 
-	    } 
-    
-	    list($y1,$m1,$d1) = explode("-",date("Y-m-d",$age)); 
-	    
-	    $now = strtotime("now"); 
-	    
-	    list($y2,$m2,$d2) = explode("-",date("Y-m-d",$now)); 
-	    
-	    $age = $y2 - $y1; 
-	    
+		if( $age === false ){
+	        return false;
+	    }
+
+	    list($y1,$m1,$d1) = explode("-",date("Y-m-d",$age));
+
+	    $now = strtotime("now");
+
+	    list($y2,$m2,$d2) = explode("-",date("Y-m-d",$now));
+
+	    $age = $y2 - $y1;
+
 	    if((int)($m2.$d2) < (int)($m1.$d1)) {
         	$age -= 1;
         }
@@ -516,19 +514,19 @@ class User
 	public function getLastloginTime( $formated = false )
 	{
 		if( $formated ) {
-			return \PortalManager\Formater::distanceDate($this->user['data']['utoljara_belepett']);	
+			return \PortalManager\Formater::distanceDate($this->user['data']['utoljara_belepett']);
 		} else {
-			return $this->user['data']['utoljara_belepett'];	
+			return $this->user['data']['utoljara_belepett'];
 		}
-		
+
 	}
 
 	public function getRegisterTime( $formated = false )
 	{
 		if( $formated ) {
-			return \PortalManager\Formater::distanceDate($this->user['data']['regisztralt']);	
+			return \PortalManager\Formater::distanceDate($this->user['data']['regisztralt']);
 		} else {
-			return $this->user['data']['regisztralt'];	
+			return $this->user['data']['regisztralt'];
 		}
 	}
 
@@ -539,7 +537,7 @@ class User
 		if( empty($keys) ) return false;
 
 		if( $arrayed ) {
-			return explode(" ", $keys);	
+			return explode(" ", $keys);
 		} else {
 			return $keys;
 		}
@@ -551,7 +549,7 @@ class User
 
 		$qry = $this->db->query("SELECT komp_id FROM ".\PortalManager\Users::TABLE_COMPETENCE_XREF." WHERE fiok_id = ".$this->getID().";");
 
-		if( $qry->rowCount() == 0 ) return false; 
+		if( $qry->rowCount() == 0 ) return false;
 
 		$dat = $qry->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -562,14 +560,14 @@ class User
 		if( $arrayed ) {
 			return $set;
 		} else {
-			return implode( ",", $set );	
-		}		
+			return implode( ",", $set );
+		}
 	}
 
 	public function getKompetenciaEgyeb()
 	{
 		return $this->user['data']['kompetencia_kiegeszites'];
-	}	
+	}
 
 	public function sendEmail( $message, $email_template, $arg = array(), $from = false )
 	{
@@ -580,7 +578,7 @@ class User
 			$this->error( $this->lang['lng_users_form_sendmessage_miss_message'] );
 		}
 
-		$arg['message'] 	= $message;		
+		$arg['message'] 	= $message;
 		$arg['from_name'] 	= $from['name'];
 		$arg['from_email']	= $from['email'];
 		$arg['infoMsg'] 	= $this->lang['lng_mail_sendth_jobabc'];

@@ -190,6 +190,7 @@
         <li class=""><a href="/cash/new"><i class="fa fa-plus-circle"></i> <span>{$lng_uj_bejegyzes}</span></a></li>
         <li class=""><a href="/stat"><i class="fa fa-pie-chart"></i> <span>{$lng_statisztika}</span></a></li>
         <li class="header">{$lng_tranzakcio}</li>
+        <li class="{if $page_lista}active{/if}"><a href="/lista"><i class="fa fa-list"></i> <span>Tranzakció lista</span></a></li>
         <li class="treeview">
           <a href="/transactions/categories"><i class="fa fa-bars"></i> <span>{$lng_kategoriak}</span>
             <span class="pull-right-container">
