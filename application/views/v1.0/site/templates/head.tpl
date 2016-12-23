@@ -37,9 +37,11 @@
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
+          {foreach from=$mycashholders item=v}
           <li>
-            <a href="">{$lng_penztarca}: <strong>0 {$settings.valuta}</strong></a>
+            <a href="#">{$v.name}: <strong>{$v.amount|number_format:0:",":"."} {$settings.valuta}</strong></a>
           </li>
+          {/foreach}
 
           {if false}
           <!-- Messages: style can be found in dropdown.less-->

@@ -18,11 +18,16 @@ class CashHolders
   {
     $ret = array();
 
+
+    if (!$userid) {
+      return $ret;
+    }
+
     $data = $this->db->query("SELECT * FROM cash_holder WHERE acc_id = $userid;")->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($data as $d)
     {
-      $ret[$d['id']] = $d['name'];
+      $ret[$d['id']] = $d;
     }
 
     return $ret;

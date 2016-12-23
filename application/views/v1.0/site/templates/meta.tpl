@@ -12,6 +12,26 @@
 <link rel="stylesheet" href="/dist/css/skins/cfm.css">
 <!-- DataTables -->
 <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/dist/js/app.min.js"></script>
+<!-- ChartJS 1.0.1 -->
+<script src="/plugins/chartjs/Chart.min.js"></script>
+
+<!-- iCheck -->
+<script src="/plugins/iCheck/icheck.min.js"></script>
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
 {if !$user}
 <!-- iCheck -->
 <link rel="stylesheet" href="/plugins/iCheck/square/blue.css">

@@ -91,7 +91,7 @@
               <select name="holder" class="form-control" id="in_holder">
                 <option value="">-- válasszon --</option>
                 {foreach from=$cash_holders key=ik item=ig}
-                <option value="{$ik}">{$ig}</option>
+                <option value="{$ik}">{$ig.name}</option>
                 {/foreach}
               </select>
             </div>
@@ -142,7 +142,7 @@
             </div>
             <div class="form-group">
               <label for="out_date">Tárgynap</label>
-              <input type="date" name="date" class="form-control" id="out_date" placeholder="">
+              <input type="date" name="date" class="form-control" id="out_date" placeholder="" value="{'Y-m-d'|date}">
             </div>
             <div class="form-group">
               <label for="out_cash">Összeg</label>
@@ -162,7 +162,7 @@
               <select name="holder" class="form-control" id="out_holder">
                 <option value="">-- válasszon --</option>
                 {foreach from=$cash_holders key=ik item=ig}
-                <option value="{$ik}">{$ig}</option>
+                <option value="{$ik}">{$ig.name}</option>
                 {/foreach}
               </select>
             </div>
@@ -206,10 +206,45 @@
     <div class="col-md-12">
       <div class="box box-danger">
         <div class="box-header with-border">
-          <i class="ion ion-cash"></i> <h3 class="box-title">{'Y'|date} pénzforgalmak</h3>
+          <i class="ion ion-cash"></i> <h3 class="box-title">Elmúlt év pénzforgalmak</h3>
         </div>
         <div class="box-body">
+          <canvas id="payments" style="width: 100%; height: 400px;"></canvas>
+          <script type="text/javascript">
+            var ctx = document.getElementById("payments");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [{foreach from=$year_inout.out item=i}"{$i.date_on}",{/foreach}],
+                    datasets: [
+                      {
+                        label: 'Bevétel',
+                        data: [{foreach from=$year_inout.in item=i}{$i.total},{/foreach}],
+                        borderWidth: 1,
+                        backgroundColor: "rgba(0,166,90,0.6)",
+                        pointBorderColor: "rgba(0,166,90,1)",
 
+                      },
+                      {
+                        label: 'Kiadás',
+                        data: [{foreach from=$year_inout.out item=i}{$i.total},{/foreach}],
+                        borderWidth: 1,
+                        backgroundColor: "rgba(255, 133, 27, 0.6)",
+                        pointBorderColor: "rgba(255, 133, 27, 1)",
+                      }
+                    ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+          </script>
         </div>
       </div>
     </div>

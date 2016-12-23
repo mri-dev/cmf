@@ -88,21 +88,6 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-<!-- REQUIRED JS SCRIPTS -->
-
-<!-- jQuery 2.2.3 -->
-<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="/bootstrap/js/bootstrap.min.js"></script>
-<!-- AdminLTE App -->
-<script src="/dist/js/app.min.js"></script>
-
-<!-- iCheck -->
-<script src="/plugins/iCheck/icheck.min.js"></script>
-
-<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
-
-<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
 
 <script>
   $(function () {
@@ -122,18 +107,11 @@
       "pageLength": 50,
       "order": [[ 1, "desc" ]]
     });
+
   });
 </script>
 
 {else}
-  <!-- REQUIRED JS SCRIPTS -->
-
-  <!-- jQuery 2.2.3 -->
-  <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
-  <!-- Bootstrap 3.3.6 -->
-  <script src="/bootstrap/js/bootstrap.min.js"></script>
-  <!-- iCheck -->
-  <script src="/plugins/iCheck/icheck.min.js"></script>
 
 {/if}
 

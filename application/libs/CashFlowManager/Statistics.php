@@ -14,6 +14,57 @@ class Statistics
 		return $this;
 	}
 
+  public function inout( $uid, $start_point = false)
+  {
+    $ret = array();
+
+
+    if (!$uid) {
+      return $ret;
+    }
+
+    $q = "SELECT
+      SUM(cf.amount) as total,
+      substr(trans_date, 1, 7) as date_on
+    FROM cash_flow as cf
+    WHERE
+    trans_type_id = 1 and
+    acc_id = $uid ";
+
+    if ($start_point) {
+      $q .= " and trans_date >= '{$start_point}' ";
+    }
+
+    $q .= "
+    GROUP BY substr(trans_date, 1, 7)
+    ORDER BY trans_date ASC;";
+
+    $in = $this->db->query($q)->fetchAll(\PDO::FETCH_ASSOC);
+
+    $q = "SELECT
+      SUM(cf.amount) as total,
+      substr(trans_date, 1, 7) as date_on
+    FROM cash_flow as cf
+    WHERE
+    trans_type_id = 2 and
+    acc_id = $uid ";
+
+    if ($start_point) {
+      $q .= " and trans_date >= '{$start_point}' ";
+    }
+
+    $q .= "
+    GROUP BY substr(trans_date, 1, 7)
+    ORDER BY trans_date ASC;";
+
+    $out = $this->db->query($q)->fetchAll(\PDO::FETCH_ASSOC);
+
+    $ret['in'] = $in;
+    $ret['out'] = $out;
+
+    return $ret;
+  }
+
   public function totalIncome( $uid, $year = false )
   {
     $n = 0;

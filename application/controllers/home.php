@@ -13,8 +13,6 @@ class home extends Controller  {
 
 			$this->user = $this->getVar('user');
 
-
-
 			$groups = new Groups(array(
 				'db' => $this->db,
 				'smarty' => $this->smarty
@@ -63,6 +61,7 @@ class home extends Controller  {
 				'limit' => 10,
 				'trans_type_id' => 2
 			)) );
+			$this->out('year_inout', $stats->inout($this->user[data][ID], date('Y-m-d', strtotime('-365 days'))) );
 
 
 			// SEO Információk

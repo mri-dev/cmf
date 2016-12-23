@@ -37,6 +37,8 @@ class CashTransactions
       )
     );
 
+    $this->db->query("UPDATE cash_holder SET amount = amount + {$cash} WHERE  id = {$holder} and acc_id = $uid;");
+
     return true;
   }
 
@@ -47,6 +49,21 @@ class CashTransactions
     }
 
     extract($post);
+
+    $this->db->insert(
+      "cash_flow",
+      array(
+        'acc_id' => $uid,
+        'group_id' => $group,
+        'trans_type_id' => 2,
+        'holder_id' => $holder,
+        'trans_date' => $date,
+        'comment' => $title,
+        'amount' => $cash
+      )
+    );
+
+    $this->db->query("UPDATE cash_holder SET amount = amount - {$cash} WHERE id = {$holder} and acc_id = $uid;");
 
     return true;
   }
